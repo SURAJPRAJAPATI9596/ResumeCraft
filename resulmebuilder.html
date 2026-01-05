@@ -6,7 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-/* ===== GLOBAL ===== */
 body{
   margin:0;
   background:#e5e7eb;
@@ -27,6 +26,7 @@ button{
   padding:10px 16px;
   border-radius:6px;
   cursor:pointer;
+  margin:5px;
 }
 button:hover{background:#1e40af}
 input,textarea{
@@ -51,30 +51,25 @@ input,textarea{
 .resume h2{margin:0;font-size:26px}
 .role{opacity:.8}
 .section{margin-top:18px}
-.section h3{
-  margin-bottom:6px;
-  padding-bottom:3px;
-}
+.section h3{margin-bottom:6px}
 ul{padding-left:18px}
 li{font-size:14px;margin-bottom:4px}
 
-/* ===== PROFILE PHOTO ===== */
+/* ===== PHOTO ===== */
 .photo{
   width:90px;
   height:90px;
   border-radius:50%;
   object-fit:cover;
-  border:3px solid white;
 }
 
-/* ===== TEMPLATE COLORS ===== */
+/* ===== TEMPLATES ===== */
 .t0{--c:#2563eb}
 .t1{--c:#0d9488}
 .t2{--c:#7c3aed}
 .t3{--c:#16a34a}
 .t4{--c:#ea580c}
 
-/* ===== TEMPLATE 0 : LEFT HEADER ===== */
 .t0 .header{
   display:flex;
   justify-content:space-between;
@@ -82,7 +77,6 @@ li{font-size:14px;margin-bottom:4px}
   padding-bottom:10px;
 }
 
-/* ===== TEMPLATE 1 : CENTER HEADER ===== */
 .t1 .header{
   text-align:center;
   border-bottom:4px solid var(--c);
@@ -90,7 +84,6 @@ li{font-size:14px;margin-bottom:4px}
 }
 .t1 .photo{margin:auto}
 
-/* ===== TEMPLATE 2 : SIDEBAR ===== */
 .t2{
   display:grid;
   grid-template-columns:30% 70%;
@@ -101,26 +94,21 @@ li{font-size:14px;margin-bottom:4px}
   padding:15px;
 }
 .t2 .main{padding-left:20px}
-.t2 h3{border-bottom:1px solid #ccc}
 
-/* ===== TEMPLATE 3 : CARD STYLE ===== */
 .t3 .section{
   background:#f0fdf4;
   padding:10px;
   border-left:5px solid var(--c);
 }
 
-/* ===== TEMPLATE 4 : TOP BAR ===== */
 .t4 .top{
   background:var(--c);
   color:white;
   padding:15px;
   display:flex;
-  align-items:center;
   gap:15px;
 }
 
-/* ===== CONTROLS ===== */
 .controls{text-align:center;margin-top:15px}
 </style>
 </head>
@@ -164,6 +152,7 @@ li{font-size:14px;margin-bottom:4px}
 <div class="controls">
 <button onclick="prev()">Previous Template</button>
 <button onclick="next()">Next Template</button>
+<button onclick="editResume()">Edit Details</button>
 <button onclick="download()">Download PDF</button>
 </div>
 </div>
@@ -194,8 +183,17 @@ function loadPhoto(e){
 }
 
 function generate(){
- data={name:name.value,role:role.value,email:email.value,phone:phone.value,location:location.value,summary:summary.value};
- sections.forEach(s=>data[s]=document.getElementById(s).value);
+ data={
+  name:name.value||"",
+  role:role.value||"",
+  email:email.value||"",
+  phone:phone.value||"",
+  location:location.value||"",
+  summary:summary.value||""
+ };
+ sections.forEach(s=>{
+  data[s]=document.getElementById(s).value||"";
+ });
  render();
  step2.style.display="none";
  step3.style.display="block";
@@ -238,13 +236,325 @@ function render(){
 }
 
 function content(){
- let c=`<div class="section"><p>${data.summary}</p></div>`;
+ let c="";
+ if(data.summary){
+  c+=`<div class="section"><p>${data.summary}</p></div>`;
+ }
  sections.forEach(s=>{
-  if(data[s]){
-   c+=`<div class="section"><h3>${s}</h3><ul>${data[s].split("\n").map(x=>`<li>${x}</li>`).join("")}</ul></div>`;
+  if(data[s].trim()){
+   c+=`
+   <div class="section">
+    <h3>${s}</h3>
+    <ul>
+     ${data[s].split("\n").filter(x=>x.trim()).map(x=>`<li>${x}</li>`).join("")}
+    </ul>
+   </div>`;
   }
  });
  return c;
+}
+
+function editResume(){
+ step3.style.display="none";
+ step2.style.display="block";
+
+ name.value=data.name;
+ role.value=data.role;
+ email.value=data.email;
+ phone.value=data.phone;
+ location.value=data.location;
+ summary.value=data.summary;
+
+ sections.forEach(s=>{
+  document.getElementById(s).value=data[s];
+ });
+}
+
+function next(){t=(t+1)%templates.length;render()}
+function prev(){t=(t-1+templates.length)%templates.length;render()}
+
+function download(){
+ html2canvas(resume,{scale:2}).then(c=>{
+  const {jsPDF}=window.jspdf;
+  let pdf=new jsPDF("p","mm","a4");
+  let h=(c.height*210)/c.width;
+  pdf.addImage(c,"PNG",0,0,210,h);
+  pdf.save("ResumeCraft.pdf");
+ });
+}
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ResumeCraft | Smart Resume Builder</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  background:#e5e7eb;
+  font-family:Arial, sans-serif;
+}
+.container{
+  max-width:1000px;
+  margin:20px auto;
+  background:#fff;
+  padding:20px;
+  border-radius:10px;
+}
+h1,h2{text-align:center}
+button{
+  background:#2563eb;
+  color:white;
+  border:none;
+  padding:10px 16px;
+  border-radius:6px;
+  cursor:pointer;
+  margin:5px;
+}
+button:hover{background:#1e40af}
+input,textarea{
+  width:100%;
+  padding:10px;
+  margin-bottom:10px;
+  border-radius:5px;
+  border:1px solid #ccc;
+}
+
+/* ===== A4 ===== */
+.a4{
+  width:210mm;
+  min-height:297mm;
+  padding:20mm;
+  background:white;
+  margin:auto;
+  box-shadow:0 0 10px rgba(0,0,0,.2);
+}
+
+/* ===== BASE ===== */
+.resume h2{margin:0;font-size:26px}
+.role{opacity:.8}
+.section{margin-top:18px}
+.section h3{margin-bottom:6px}
+ul{padding-left:18px}
+li{font-size:14px;margin-bottom:4px}
+
+/* ===== PHOTO ===== */
+.photo{
+  width:90px;
+  height:90px;
+  border-radius:50%;
+  object-fit:cover;
+}
+
+/* ===== TEMPLATES ===== */
+.t0{--c:#2563eb}
+.t1{--c:#0d9488}
+.t2{--c:#7c3aed}
+.t3{--c:#16a34a}
+.t4{--c:#ea580c}
+
+.t0 .header{
+  display:flex;
+  justify-content:space-between;
+  border-bottom:4px solid var(--c);
+  padding-bottom:10px;
+}
+
+.t1 .header{
+  text-align:center;
+  border-bottom:4px solid var(--c);
+  padding-bottom:10px;
+}
+.t1 .photo{margin:auto}
+
+.t2{
+  display:grid;
+  grid-template-columns:30% 70%;
+}
+.t2 .side{
+  background:var(--c);
+  color:white;
+  padding:15px;
+}
+.t2 .main{padding-left:20px}
+
+.t3 .section{
+  background:#f0fdf4;
+  padding:10px;
+  border-left:5px solid var(--c);
+}
+
+.t4 .top{
+  background:var(--c);
+  color:white;
+  padding:15px;
+  display:flex;
+  gap:15px;
+}
+
+.controls{text-align:center;margin-top:15px}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h1>ResumeCraft</h1>
+
+<!-- STEP 1 -->
+<div id="step1">
+<h2>Select Sections</h2>
+<label><input type="checkbox" value="Experience" checked> Experience</label><br>
+<label><input type="checkbox" value="Projects" checked> Projects</label><br>
+<label><input type="checkbox" value="Skills" checked> Skills</label><br>
+<label><input type="checkbox" value="Education" checked> Education</label><br><br>
+<button onclick="goForm()">Next</button>
+</div>
+
+<!-- STEP 2 -->
+<div id="step2" style="display:none">
+<h2>Fill Details</h2>
+
+<input type="file" accept="image/*" onchange="loadPhoto(event)">
+<input id="name" placeholder="Full Name">
+<input id="role" placeholder="Role">
+<input id="email" placeholder="Email">
+<input id="phone" placeholder="Phone">
+<input id="location" placeholder="Location">
+<textarea id="summary" placeholder="Professional Summary"></textarea>
+
+<div id="fields"></div>
+<button onclick="generate()">Generate Resume</button>
+</div>
+
+<!-- STEP 3 -->
+<div id="step3" style="display:none">
+<h2>Preview</h2>
+<div id="resume" class="a4 resume t0"></div>
+
+<div class="controls">
+<button onclick="prev()">Previous Template</button>
+<button onclick="next()">Next Template</button>
+<button onclick="editResume()">Edit Details</button>
+<button onclick="download()">Download PDF</button>
+</div>
+</div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+let sections=[], data={}, t=0, photo="";
+const templates=["t0","t1","t2","t3","t4"];
+
+function goForm(){
+ sections=[...document.querySelectorAll('#step1 input:checked')].map(x=>x.value);
+ step1.style.display="none";
+ step2.style.display="block";
+ fields.innerHTML="";
+ sections.forEach(s=>{
+  fields.innerHTML+=`<textarea id="${s}" placeholder="${s} (one per line)"></textarea>`;
+ });
+}
+
+function loadPhoto(e){
+ let r=new FileReader();
+ r.onload=()=>photo=r.result;
+ r.readAsDataURL(e.target.files[0]);
+}
+
+function generate(){
+ data={
+  name:name.value||"",
+  role:role.value||"",
+  email:email.value||"",
+  phone:phone.value||"",
+  location:location.value||"",
+  summary:summary.value||""
+ };
+ sections.forEach(s=>{
+  data[s]=document.getElementById(s).value||"";
+ });
+ render();
+ step2.style.display="none";
+ step3.style.display="block";
+}
+
+function render(){
+ let r=document.getElementById("resume");
+ r.className="a4 resume "+templates[t];
+
+ if(templates[t]=="t2"){
+  r.innerHTML=`
+  <div class="side">
+   ${photo?`<img src="${photo}" class="photo">`:""}
+   <h2>${data.name}</h2>
+   <p>${data.role}</p>
+   <p>${data.email}<br>${data.phone}<br>${data.location}</p>
+  </div>
+  <div class="main">${content()}</div>`;
+ }
+ else if(templates[t]=="t4"){
+  r.innerHTML=`
+  <div class="top">
+   ${photo?`<img src="${photo}" class="photo">`:""}
+   <div>
+    <h2>${data.name}</h2>
+    <div>${data.role}</div>
+   </div>
+  </div>${content()}`;
+ }
+ else{
+  r.innerHTML=`
+  <div class="header">
+   <div>
+    <h2>${data.name}</h2>
+    <div class="role">${data.role}</div>
+   </div>
+   ${photo?`<img src="${photo}" class="photo">`:""}
+  </div>${content()}`;
+ }
+}
+
+function content(){
+ let c="";
+ if(data.summary){
+  c+=`<div class="section"><p>${data.summary}</p></div>`;
+ }
+ sections.forEach(s=>{
+  if(data[s].trim()){
+   c+=`
+   <div class="section">
+    <h3>${s}</h3>
+    <ul>
+     ${data[s].split("\n").filter(x=>x.trim()).map(x=>`<li>${x}</li>`).join("")}
+    </ul>
+   </div>`;
+  }
+ });
+ return c;
+}
+
+function editResume(){
+ step3.style.display="none";
+ step2.style.display="block";
+
+ name.value=data.name;
+ role.value=data.role;
+ email.value=data.email;
+ phone.value=data.phone;
+ location.value=data.location;
+ summary.value=data.summary;
+
+ sections.forEach(s=>{
+  document.getElementById(s).value=data[s];
+ });
 }
 
 function next(){t=(t+1)%templates.length;render()}
