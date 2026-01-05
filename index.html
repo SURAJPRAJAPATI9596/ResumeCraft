@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ResumeCraft | Smart Resume Builder</title>
+
+<style>
+/* ------------------- THEME VARIABLES ------------------- */
+:root {
+    --bg-color: #f4f6fb;
+    --text-color: #333;
+    --card-bg: #ffffff;
+    --section-bg: #ffffff;
+    --muted-text: #555;
+}
+
+.dark-theme {
+    --bg-color: #0f172a;
+    --text-color: #e5e7eb;
+    --card-bg: #1e293b;
+    --section-bg: #020617;
+    --muted-text: #cbd5f5;
+}
+
+/* ------------------- GLOBAL ------------------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    background: var(--bg-color);
+    color: var(--text-color);
+    transition: 0.3s;
+}
+
+/* ------------------- HEADER ------------------- */
+header {
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    padding: 15px 30px;
+    color: white;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.menu-btn {
+    display: none;
+    font-size: 26px;
+    cursor: pointer;
+}
+
+.theme-btn {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-left: 15px;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+
+.underline{
+    text-decoration: none;
+    color:white;
+}
+
+ 
+/* ------------------- HERO ------------------- */
+.hero {
+    text-align: center;
+    padding: 80px 20px;
+    background: var(--section-bg);
+}
+
+.hero p {
+    color: var(--muted-text);
+}
+
+/* ------------------- ACTION ICONS ------------------- */
+.actions {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    padding: 50px 20px;
+}
+
+.action-card {
+    background: var(--card-bg);
+    width: 200px;
+    padding: 30px;
+    text-align: center;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    transition: 0.3s;
+}
+.under{
+text-decoration:none;
+color:black;
+}
+
+/* ------------------- TEMPLATES ------------------- */
+.templates {
+    padding: 60px 30px;
+    background: #f9fafb;
+}
+
+.dark-theme .templates {
+    background: #020617;
+}
+
+.template-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.template {
+    background: var(--card-bg);
+    height: 260px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border:2px solid black;
+}
+
+.template img{
+    
+    width:100%;
+    height:100%;
+    object-fit: cover;
+}
+
+/* ------------------- ARTICLE ------------------- */
+.article {
+    padding: 60px 40px;
+    background: var(--section-bg);
+}
+
+.article p {
+    color: var(--muted-text);
+}
+
+/* ------------------- FOOTER ------------------- */
+footer {
+    background: #111827;
+    color: #d1d5db;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+/* ------------------- RESPONSIVE ------------------- */
+@media (max-width: 768px) {
+    nav ul {
+        display: none;
+        flex-direction: column;
+        background: #4f46e5;
+        position: absolute;
+        top: 60px;
+        right: 0;
+        width: 100%;
+        padding: 20px;
+    }
+
+    nav ul.show {
+        display: flex;
+    }
+
+    .menu-btn {
+        display: block;
+    }
+
+    .actions {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header>
+    <div class="navbar">
+        <div class="logo">ResumeCraft</div>
+
+        <div>
+            <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+            <span class="menu-btn" onclick="toggleMenu()">☰</span>
+        </div>
+
+        <nav>
+            <ul id="menu">
+                <li><a class="underline" href="/index.html">Home</a></li>
+                <li><a class="underline" href="/resulmebuilder.html">Create Resume</a></li>
+                <li><a class="underline" href="/ATSScaner.html">ATS Scanner</a></li>
+                <li><a  class="underline" href="#">Templates</a></li>
+                <li><a  class="underline" href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+    <h1>Build Smart Resumes That Get Hired</h1>
+    <p>Create ATS-friendly resumes in minutes using modern templates</p>
+</section>
+
+<!-- ACTION ICONS -->
+<section class="actions">
+    <div class="action-card"><a class="under" href="/resulmebuilder.html">Create Resume</a></div>
+    <div class="action-card"><a class="under" href="/ATSScaner.html">🤖 ATS Scanner</a></div>
+</section>
+
+<!-- TEMPLATES -->
+<section class="templates">
+    <h2 style="text-align:center">ATS Friendly Resume Templates</h2>
+    
+    <div class="template-grid">
+        
+        <div class="template"><img src="/1resumetemplate.jpg" alt="template" ></div>
+        <div class="template"><img src="/2resumetemplate.jpg" alt="template"></div>
+        <div class="template"><img src="/3resumetemplate.jpg" alt="template"></div>
+        <div class="template"><img src="/4resumetemplage.jpg" alt="template"></div>
+        <div class="template"><img src="/5resumetemplate.jpg" alt="template"></div>
+        <div class="template"><img src="/6resumetemplate.jpg" alt="template"></div>
+        <div class="template"><img src="/7resumetemplate.jpg" alt="template"></div>
+        <div class="template"><img src="/8resumetemplate.jpg" alt="template"></div>
+        <div class="template"><img src="/9resumetemplate.jpg" alt="template"></div>
+        <div class="template"><img src="/10resumetemplate.jpg" alt="template"></div>
+        <div class="template"><img src="/11resumetemplate.jpg" alt="template"></div>
+        <div class="template"><img src="/12resumetemplate.jpg" alt="template"></div>
+
+    </div>
+
+</section>
+
+<!-- ARTICLES -->
+<section class="article">
+    <h2>What Makes a Best Resume?</h2>
+    <p>
+        A best resume is clear, concise, ATS-friendly and focused on job-relevant
+        skills. Clean formatting, correct keywords and measurable achievements
+        increase your chances of selection.
+    </p>
+</section>
+
+<section class="article">
+    <h2>Why Choose ResumeCraft?</h2>
+    <p>
+        ResumeCraft helps students and professionals build modern resumes using
+        professional templates and ATS-optimized structure.
+    </p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <h3>About ResumeCraft</h3>
+    <p>Built by Suraj Prajapati(Full Stack developer +AI)</p>
+    <h3>Get in touch</h3>
+    <p>Linkedin-Surajprajapati9596</p>
+    <p>Github-Surajprajapati9596</p>
+    <p>Leetcode-Surajprajapati9596</p>
+    <p>Teligram-Surajprajapati9596</p>
+    <p>E-mail-Surajprajapatijob@gmail.com</p>
+    <p>Contact-8737003813(Whatshap)</p>
+    
+</footer>
+
+<script>
+function toggleMenu() {
+    document.getElementById("menu").classList.toggle("show");
+}
+
+function toggleTheme() {
+    document.body.classList.toggle("dark-theme");
+}
+</script>
+
+</body>
+</html>
